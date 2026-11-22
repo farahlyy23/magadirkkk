@@ -1,0 +1,1346 @@
+<!DOCTYPE html>
+<html lang="id" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IMUSLIM - Portal Artikel & Kajian Islami</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts: Plus Jakarta Sans & Amiri -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Amiri:ital,wght@0,400;0,700;1,400&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+                        arabic: ['"Amiri"', 'serif'],
+                    },
+                    colors: {
+                        imuslim: {
+                            black: '#020617',
+                            deep: '#090D16',
+                            navy: '#0F172A',
+                            royal: '#1E3A8A',
+                            sky: '#0EA5E9',
+                            light: '#38BDF8',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        /* Custom scrollbar untuk estetika modern */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: rgba(56, 189, 248, 0.3);
+            border-radius: 9999px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: rgba(56, 189, 248, 0.6);
+        }
+        .islamic-pattern {
+            background-image: radial-gradient(rgba(56, 189, 248, 0.12) 1px, transparent 1px);
+            background-size: 24px 24px;
+        }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-900 dark:bg-imuslim-black dark:text-slate-100 transition-colors duration-300 min-h-screen flex flex-col selection:bg-imuslim-sky selection:text-white">
+
+    <!-- Toast Notification Container (Pengganti alert()) -->
+    <div id="toastContainer" class="fixed bottom-5 right-5 z-[100] flex flex-col gap-2 pointer-events-none"></div>
+
+    <!-- Header Sticky -->
+    <header class="sticky top-0 z-40 w-full backdrop-blur-md bg-white/90 dark:bg-imuslim-deep/90 border-b border-slate-200 dark:border-slate-800/80 transition-colors duration-300">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-20">
+                
+                <!-- Brand & Logo Masjid IMUSLIM -->
+                <a href="#" onclick="filterCategory('Semua'); return false;" class="flex items-center gap-3 group focus:outline-none">
+                    <div class="relative w-12 h-12 rounded-2xl bg-gradient-to-br from-imuslim-royal via-imuslim-navy to-imuslim-black p-0.5 shadow-lg shadow-imuslim-sky/20 group-hover:scale-105 transition-transform">
+                        <div class="w-full h-full bg-imuslim-navy rounded-[14px] flex items-center justify-center overflow-hidden relative">
+                            <!-- Vektor Logo Masjid Biru Muda, Biru Tua & Hitam -->
+                            <svg viewBox="0 0 64 64" class="w-10 h-10" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <!-- Lingkaran Cahaya Belakang -->
+                                <circle cx="32" cy="32" r="26" fill="#0F172A" stroke="#38BDF8" stroke-width="2"/>
+                                <!-- Bulan Sabit & Bintang -->
+                                <path d="M32 9C30.3 9 28.8 10.1 28.4 11.7C29.8 11.2 31.4 11.8 32.1 13.1C32.8 14.4 32.3 16 31 16.8C32.6 17.1 34.2 16.1 34.7 14.5C35.3 12.4 34.1 9.8 32 9Z" fill="#38BDF8"/>
+                                <!-- Menara Kiri -->
+                                <rect x="13" y="25" width="4" height="23" rx="1" fill="#0EA5E9"/>
+                                <path d="M12 25L15 19L18 25H12Z" fill="#38BDF8"/>
+                                <!-- Menara Kanan -->
+                                <rect x="47" y="25" width="4" height="23" rx="1" fill="#0EA5E9"/>
+                                <path d="M46 25L49 19L52 25H46Z" fill="#38BDF8"/>
+                                <!-- Kubah Utama -->
+                                <path d="M21 33C21 25 27 21 32 18C37 21 43 25 43 33H21Z" fill="url(#domeGrad)"/>
+                                <!-- Badan Masjid -->
+                                <rect x="19" y="33" width="26" height="15" rx="2" fill="#1E3A8A" stroke="#38BDF8" stroke-width="1.5"/>
+                                <!-- Pintu Gerbang Hitam/Biru Tua -->
+                                <path d="M28 48V40C28 37.8 29.8 36 32 36C34.2 36 36 37.8 36 40V48H28Z" fill="#020617" stroke="#38BDF8" stroke-width="1.2"/>
+                                <!-- Jendela Kiri & Kanan -->
+                                <rect x="22" y="39" width="3" height="5" rx="1.5" fill="#38BDF8"/>
+                                <rect x="39" y="39" width="3" height="5" rx="1.5" fill="#38BDF8"/>
+                                <!-- Dasar -->
+                                <rect x="11" y="48" width="42" height="3" rx="1.5" fill="#38BDF8"/>
+                                <defs>
+                                    <linearGradient id="domeGrad" x1="21" y1="18" x2="43" y2="33" gradientUnits="userSpaceOnUse">
+                                        <stop stop-color="#38BDF8"/>
+                                        <stop offset="1" stop-color="#0284C7"/>
+                                    </linearGradient>
+                                </defs>
+                            </svg>
+                        </div>
+                    </div>
+                    <div>
+                        <span class="text-2xl font-extrabold tracking-tight bg-gradient-to-r from-imuslim-royal via-imuslim-sky to-imuslim-light dark:from-white dark:via-imuslim-light dark:to-imuslim-sky bg-clip-text text-transparent">
+                            IMUSLIM
+                        </span>
+                        <p class="text-[11px] font-medium text-slate-500 dark:text-slate-400 -mt-1 tracking-wider uppercase">
+                            Cahaya Ilmu & Adab
+                        </p>
+                    </div>
+                </a>
+
+                <!-- Navigasi Desktop -->
+                <nav class="hidden md:flex items-center gap-2 bg-slate-100/80 dark:bg-imuslim-navy/80 p-1.5 rounded-2xl border border-slate-200/80 dark:border-slate-800">
+                    <button onclick="filterCategory('Semua')" data-nav="Semua" class="nav-btn px-4 py-2 rounded-xl text-sm font-semibold transition-all bg-imuslim-royal text-white shadow-sm">
+                        Beranda
+                    </button>
+                    <button onclick="filterCategory('Adab dan Akhlak')" data-nav="Adab dan Akhlak" class="nav-btn px-4 py-2 rounded-xl text-sm font-semibold text-slate-600 dark:text-slate-300 hover:text-imuslim-sky transition-all">
+                        Adab dan Akhlak
+                    </button>
+                    <button onclick="filterCategory('Fikih Muslimah')" data-nav="Fikih Muslimah" class="nav-btn px-4 py-2 rounded-xl text-sm font-semibold text-slate-600 dark:text-slate-300 hover:text-imuslim-sky transition-all">
+                        Fikih Muslimah
+                    </button>
+                </nav>
+
+                <!-- Tombol Aksi Kanan (Siang/Malam & Login Admin) -->
+                <div class="flex items-center gap-2 sm:gap-3">
+                    <!-- Toggle Tema Siang / Malam -->
+                    <button id="themeToggle" onclick="toggleTheme()" aria-label="Ubah Tema Siang/Malam" class="p-2.5 rounded-xl bg-slate-100 dark:bg-imuslim-navy text-slate-700 dark:text-imuslim-light border border-slate-200 dark:border-slate-700/80 hover:border-imuslim-sky transition-all flex items-center gap-2 shadow-sm">
+                        <i id="themeIconSun" data-lucide="sun" class="w-5 h-5 hidden text-amber-500"></i>
+                        <i id="themeIconMoon" data-lucide="moon" class="w-5 h-5 text-imuslim-light"></i>
+                        <span id="themeLabel" class="hidden lg:inline text-xs font-semibold">Mode Malam</span>
+                    </button>
+
+                    <!-- Tombol Login / Status Admin -->
+                    <div id="adminHeaderAction">
+                        <button onclick="openLoginModal()" class="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-gradient-to-r from-imuslim-royal to-imuslim-sky hover:from-imuslim-sky hover:to-imuslim-royal text-white text-sm font-semibold shadow-md shadow-imuslim-sky/20 transition-all">
+                            <i data-lucide="shield-check" class="w-4 h-4"></i>
+                            <span>Login Admin</span>
+                        </button>
+                    </div>
+
+                    <!-- Tombol Menu Mobile -->
+                    <button onclick="toggleMobileMenu()" class="md:hidden p-2.5 rounded-xl bg-slate-100 dark:bg-imuslim-navy text-slate-700 dark:text-slate-200 border border-slate-200 dark:border-slate-700">
+                        <i data-lucide="menu" class="w-5 h-5"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Menu Navigasi Mobile -->
+        <div id="mobileMenu" class="hidden md:hidden border-t border-slate-200 dark:border-slate-800 bg-white dark:bg-imuslim-deep px-4 py-3 space-y-2">
+            <button onclick="filterCategory('Semua'); toggleMobileMenu();" data-nav-mobile="Semua" class="mobile-nav-btn w-full text-left px-4 py-2.5 rounded-xl text-sm font-semibold bg-imuslim-royal text-white">
+                Beranda (Semua Artikel)
+            </button>
+            <button onclick="filterCategory('Adab dan Akhlak'); toggleMobileMenu();" data-nav-mobile="Adab dan Akhlak" class="mobile-nav-btn w-full text-left px-4 py-2.5 rounded-xl text-sm font-semibold text-slate-700 dark:text-slate-300">
+                Adab dan Akhlak
+            </button>
+            <button onclick="filterCategory('Fikih Muslimah'); toggleMobileMenu();" data-nav-mobile="Fikih Muslimah" class="mobile-nav-btn w-full text-left px-4 py-2.5 rounded-xl text-sm font-semibold text-slate-700 dark:text-slate-300">
+                Fikih Muslimah
+            </button>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="relative overflow-hidden bg-gradient-to-b from-imuslim-navy via-imuslim-royal/90 to-imuslim-black dark:from-imuslim-deep dark:via-imuslim-navy dark:to-imuslim-black text-white py-14 sm:py-20 islamic-pattern border-b border-imuslim-sky/20">
+        <!-- Ornamen Cahaya -->
+        <div class="absolute -top-24 -left-24 w-72 h-72 bg-imuslim-sky/20 rounded-full blur-3xl pointer-events-none"></div>
+        <div class="absolute -bottom-24 -right-24 w-80 h-80 bg-imuslim-royal/40 rounded-full blur-3xl pointer-events-none"></div>
+
+        <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 text-center">
+            <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-imuslim-sky/15 border border-imuslim-light/30 text-imuslim-light text-xs font-semibold mb-5">
+                <i data-lucide="sparkles" class="w-3.5 h-3.5"></i>
+                <span>Portal Literasi & Khazanah Islam Kontemporer</span>
+            </div>
+
+            <h1 class="text-3xl sm:text-5xl font-extrabold tracking-tight leading-tight mb-4">
+                Menghidupkan Hati dengan <span class="text-imuslim-light">Ilmu, Adab & Akhlak</span>
+            </h1>
+
+            <p class="font-arabic text-xl sm:text-2xl text-imuslim-light/90 mb-2" dir="rtl">
+                طَلَبُ الْعِلْمِ فَرِيضَةٌ عَلَى كُلِّ مُسْلِمٍ
+            </p>
+            <p class="text-sm sm:text-base text-slate-300 max-w-2xl mx-auto mb-8">
+                "Menuntut ilmu itu wajib atas setiap Muslim." — Temukan panduan praktis adab keseharian serta pembahasan mendalam seputar fikih muslimah yang shahih dan menyejukkan.
+            </p>
+
+            <!-- Kolom Pencarian Artikel -->
+            <div class="max-w-xl mx-auto relative">
+                <div class="relative flex items-center">
+                    <i data-lucide="search" class="w-5 h-5 text-imuslim-light absolute left-4 pointer-events-none"></i>
+                    <input 
+                        type="text" 
+                        id="searchInput" 
+                        oninput="handleSearch()"
+                        placeholder="Cari judul artikel atau topik kajian..." 
+                        class="w-full pl-12 pr-24 py-3.5 rounded-2xl bg-imuslim-black/70 border border-imuslim-light/30 text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-imuslim-light focus:border-transparent shadow-xl backdrop-blur-md text-sm sm:text-base"
+                    >
+                    <button id="clearSearchBtn" onclick="clearSearch()" class="hidden absolute right-3 px-3 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-xs font-medium text-slate-300 transition">
+                        Hapus
+                    </button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Main Content Area -->
+    <main class="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-10">
+
+        <!-- Dashboard Admin Panel (Hanya Muncul Saat Admin Login) -->
+        <section id="adminDashboardPanel" class="hidden mb-10 rounded-3xl bg-gradient-to-r from-imuslim-navy via-imuslim-royal/90 to-imuslim-navy p-6 sm:p-8 text-white border border-imuslim-light/40 shadow-2xl shadow-imuslim-sky/10">
+            <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-6">
+                <div class="flex items-start sm:items-center gap-4">
+                    <div class="w-14 h-14 rounded-2xl bg-imuslim-sky/20 border border-imuslim-light/40 flex items-center justify-center shrink-0">
+                        <i data-lucide="layout-dashboard" class="w-7 h-7 text-imuslim-light"></i>
+                    </div>
+                    <div>
+                        <div class="flex items-center gap-2 flex-wrap">
+                            <h2 class="text-xl sm:text-2xl font-bold">Dashboard Pengelola IMUSLIM</h2>
+                            <span class="px-2.5 py-0.5 rounded-full text-xs font-bold bg-emerald-500/20 text-emerald-300 border border-emerald-400/30">
+                                Admin: DIRBILSYA
+                            </span>
+                        </div>
+                        <p class="text-sm text-slate-300 mt-1">
+                            Anda memiliki akses penuh untuk menambah artikel baru, memperbarui isi, serta menghapus publikasi.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="flex flex-wrap items-center gap-3">
+                    <button onclick="openArticleFormModal()" class="flex items-center gap-2 px-5 py-3 rounded-2xl bg-imuslim-light hover:bg-white text-imuslim-black font-bold text-sm shadow-lg transition-all">
+                        <i data-lucide="plus-circle" class="w-5 h-5"></i>
+                        <span>Tambah Artikel Baru</span>
+                    </button>
+                    <button onclick="openConfirmResetModal()" class="flex items-center gap-2 px-4 py-3 rounded-2xl bg-imuslim-black/50 hover:bg-imuslim-black/80 text-slate-200 border border-slate-600 text-sm font-semibold transition-all">
+                        <i data-lucide="rotate-ccw" class="w-4 h-4"></i>
+                        <span>Reset Artikel Default</span>
+                    </button>
+                    <button onclick="logoutAdmin()" class="flex items-center gap-2 px-4 py-3 rounded-2xl bg-rose-600/80 hover:bg-rose-600 text-white text-sm font-semibold transition-all">
+                        <i data-lucide="log-out" class="w-4 h-4"></i>
+                        <span>Keluar</span>
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Bar Filter & Statistik Artikel -->
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8 pb-4 border-b border-slate-200 dark:border-slate-800">
+            <div>
+                <h2 id="sectionHeading" class="text-2xl font-bold text-slate-900 dark:text-white flex items-center gap-2.5">
+                    <span class="w-2 h-7 rounded-full bg-gradient-to-b from-imuslim-light to-imuslim-royal inline-block"></span>
+                    <span>Semua Artikel Pilihan</span>
+                </h2>
+                <p id="articleCountText" class="text-sm text-slate-500 dark:text-slate-400 mt-1">
+                    Menampilkan artikel terbaru seputar keislaman
+                </p>
+            </div>
+
+            <!-- Filter Pills Cepat -->
+            <div class="flex items-center gap-2 overflow-x-auto pb-1 sm:pb-0">
+                <button onclick="filterCategory('Semua')" data-pill="Semua" class="pill-btn px-4 py-2 rounded-xl text-xs sm:text-sm font-semibold bg-imuslim-royal text-white transition">
+                    Semua
+                </button>
+                <button onclick="filterCategory('Adab dan Akhlak')" data-pill="Adab dan Akhlak" class="pill-btn px-4 py-2 rounded-xl text-xs sm:text-sm font-semibold bg-slate-200/70 dark:bg-imuslim-navy text-slate-700 dark:text-slate-300 hover:border-imuslim-sky transition">
+                    Adab dan Akhlak
+                </button>
+                <button onclick="filterCategory('Fikih Muslimah')" data-pill="Fikih Muslimah" class="pill-btn px-4 py-2 rounded-xl text-xs sm:text-sm font-semibold bg-slate-200/70 dark:bg-imuslim-navy text-slate-700 dark:text-slate-300 hover:border-imuslim-sky transition">
+                    Fikih Muslimah
+                </button>
+            </div>
+        </div>
+
+        <!-- Grid Daftar Artikel -->
+        <div id="articlesGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-7">
+            <!-- Kartu artikel akan dirender oleh JavaScript -->
+        </div>
+
+        <!-- State Kosong Jika Tidak Ditemukan -->
+        <div id="emptyState" class="hidden py-20 text-center">
+            <div class="w-20 h-20 rounded-3xl bg-slate-200/70 dark:bg-imuslim-navy mx-auto flex items-center justify-center mb-4 text-imuslim-sky">
+                <i data-lucide="book-open-check" class="w-10 h-10"></i>
+            </div>
+            <h3 class="text-xl font-bold text-slate-800 dark:text-white">Artikel Tidak Ditemukan</h3>
+            <p class="text-slate-500 dark:text-slate-400 text-sm max-w-md mx-auto mt-2">
+                Maaf, belum ada artikel yang sesuai dengan kata kunci atau kategori yang Anda pilih.
+            </p>
+            <button onclick="resetFilters()" class="mt-5 px-5 py-2.5 rounded-xl bg-imuslim-sky text-white text-sm font-semibold hover:bg-imuslim-royal transition">
+                Tampilkan Semua Artikel
+            </button>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-white dark:bg-imuslim-deep border-t border-slate-200 dark:border-slate-800/80 mt-16 transition-colors duration-300">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8 items-center">
+                <div>
+                    <div class="flex items-center gap-2.5 mb-3">
+                        <div class="w-9 h-9 rounded-xl bg-imuslim-navy flex items-center justify-center border border-imuslim-sky/40">
+                            <i data-lucide="landmark" class="w-5 h-5 text-imuslim-light"></i>
+                        </div>
+                        <span class="text-xl font-extrabold text-imuslim-royal dark:text-white tracking-tight">IMUSLIM</span>
+                    </div>
+                    <p class="text-sm text-slate-500 dark:text-slate-400 leading-relaxed">
+                        Media edukasi dan dakwah digital yang menyajikan kajian Adab, Akhlak Mulia, dan Fikih Muslimah dengan tampilan modern serta nyaman dibaca siang maupun malam.
+                    </p>
+                </div>
+
+                <div class="flex flex-col md:items-center">
+                    <h4 class="text-sm font-bold uppercase tracking-wider text-slate-800 dark:text-slate-200 mb-3">Kategori Utama</h4>
+                    <div class="flex flex-wrap gap-2">
+                        <button onclick="filterCategory('Adab dan Akhlak'); window.scrollTo({top: 0, behavior: 'smooth'});" class="px-3.5 py-1.5 rounded-xl text-xs font-semibold bg-slate-100 dark:bg-imuslim-navy text-slate-700 dark:text-imuslim-light hover:bg-imuslim-sky hover:text-white transition">
+                            Adab dan Akhlak
+                        </button>
+                        <button onclick="filterCategory('Fikih Muslimah'); window.scrollTo({top: 0, behavior: 'smooth'});" class="px-3.5 py-1.5 rounded-xl text-xs font-semibold bg-slate-100 dark:bg-imuslim-navy text-slate-700 dark:text-imuslim-light hover:bg-imuslim-sky hover:text-white transition">
+                            Fikih Muslimah
+                        </button>
+                    </div>
+                </div>
+
+                <div class="md:text-right">
+                    <p class="text-sm font-semibold text-slate-700 dark:text-slate-300">Portal Artikel Islami IMUSLIM</p>
+                    <p class="text-xs text-slate-500 dark:text-slate-500 mt-1">
+                        &copy; 2026 IMUSLIM Digital Dakwah. Seluruh hak cipta dilindungi.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- ===================================================================== -->
+    <!-- MODAL 1: BACA DETAIL ARTIKEL LENGKAP                                  -->
+    <!-- ===================================================================== -->
+    <div id="articleDetailModal" class="fixed inset-0 z-50 hidden overflow-y-auto bg-imuslim-black/80 backdrop-blur-sm p-4 sm:p-6">
+        <div class="min-h-full flex items-center justify-center">
+            <div class="relative w-full max-w-4xl rounded-3xl bg-white dark:bg-imuslim-navy border border-slate-200 dark:border-slate-700/80 shadow-2xl overflow-hidden my-8">
+                <!-- Tombol Tutup Sticky di Pojok -->
+                <button onclick="closeDetailModal()" aria-label="Tutup Artikel" class="absolute top-4 right-4 z-20 p-2.5 rounded-2xl bg-imuslim-black/70 hover:bg-imuslim-sky text-white backdrop-blur-md transition-all shadow-lg">
+                    <i data-lucide="x" class="w-5 h-5"></i>
+                </button>
+
+                <!-- Foto Utama Artikel -->
+                <div class="relative h-64 sm:h-96 w-full bg-imuslim-black">
+                    <img id="detailMainImage" src="" alt="Foto Utama Artikel" class="w-full h-full object-cover" onerror="this.src='https://placehold.co/1200x600/0F172A/38BDF8?text=IMUSLIM+Artikel'">
+                    <div class="absolute inset-0 bg-gradient-to-t from-imuslim-black via-imuslim-black/40 to-transparent"></div>
+                    <div class="absolute bottom-6 left-6 right-6">
+                        <span id="detailCategoryBadge" class="inline-block px-3.5 py-1 rounded-full text-xs font-bold bg-imuslim-sky text-white mb-3 shadow">
+                            Kategori
+                        </span>
+                        <h2 id="detailTitle" class="text-2xl sm:text-4xl font-extrabold text-white leading-snug">
+                            Judul Artikel
+                        </h2>
+                        <div class="flex items-center gap-4 text-xs sm:text-sm text-slate-300 mt-3">
+                            <span class="flex items-center gap-1.5">
+                                <i data-lucide="calendar" class="w-4 h-4 text-imuslim-light"></i>
+                                <span id="detailDate">Tanggal</span>
+                            </span>
+                            <span class="flex items-center gap-1.5">
+                                <i data-lucide="user-check" class="w-4 h-4 text-imuslim-light"></i>
+                                <span>Redaksi IMUSLIM</span>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Konten Detail Artikel -->
+                <div class="p-6 sm:p-10">
+                    <div id="detailContent" class="prose prose-slate dark:prose-invert max-w-none text-slate-700 dark:text-slate-200 leading-relaxed space-y-4 text-base sm:text-lg whitespace-pre-line">
+                        <!-- Isi artikel -->
+                    </div>
+
+                    <!-- Bagian Foto Pendukung Artikel -->
+                    <div id="detailSupportSection" class="mt-10 pt-8 border-t border-slate-200 dark:border-slate-700/80">
+                        <h3 class="text-lg font-bold text-slate-900 dark:text-white mb-4 flex items-center gap-2">
+                            <i data-lucide="image" class="w-5 h-5 text-imuslim-sky"></i>
+                            <span>Foto Pendukung & Ilustrasi Kajian</span>
+                        </h3>
+                        <div class="rounded-2xl overflow-hidden border border-slate-200 dark:border-slate-700 bg-slate-100 dark:bg-imuslim-black">
+                            <img id="detailSupportImage" src="" alt="Foto Pendukung Artikel" class="w-full max-h-[420px] object-cover" onerror="this.src='https://placehold.co/900x500/1E3A8A/38BDF8?text=Dokumentasi+Pendukung+IMUSLIM'">
+                        </div>
+                    </div>
+
+                    <!-- Footer Modal Baca -->
+                    <div class="mt-8 pt-6 border-t border-slate-200 dark:border-slate-800 flex items-center justify-between">
+                        <span class="text-xs text-slate-500 dark:text-slate-400">Semoga bermanfaat dan menambah keberkahan ilmu.</span>
+                        <button onclick="closeDetailModal()" class="px-6 py-2.5 rounded-xl bg-imuslim-royal hover:bg-imuslim-sky text-white text-sm font-semibold transition">
+                            Tutup Bacaan
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===================================================================== -->
+    <!-- MODAL 2: LOGIN ADMIN                                                  -->
+    <!-- ===================================================================== -->
+    <div id="loginModal" class="fixed inset-0 z-50 hidden overflow-y-auto bg-imuslim-black/80 backdrop-blur-sm p-4">
+        <div class="min-h-full flex items-center justify-center">
+            <div class="relative w-full max-w-md rounded-3xl bg-white dark:bg-imuslim-navy border border-slate-200 dark:border-slate-700 p-6 sm:p-8 shadow-2xl">
+                <button onclick="closeLoginModal()" class="absolute top-4 right-4 p-2 rounded-xl text-slate-400 hover:text-slate-700 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800 transition">
+                    <i data-lucide="x" class="w-5 h-5"></i>
+                </button>
+
+                <div class="text-center mb-6">
+                    <div class="w-16 h-16 rounded-2xl bg-gradient-to-br from-imuslim-royal to-imuslim-sky mx-auto flex items-center justify-center text-white shadow-lg shadow-imuslim-sky/30 mb-4">
+                        <i data-lucide="lock-keyhole" class="w-8 h-8"></i>
+                    </div>
+                    <h3 class="text-2xl font-extrabold text-slate-900 dark:text-white">Login Admin IMUSLIM</h3>
+                    <p class="text-sm text-slate-500 dark:text-slate-400 mt-1">
+                        Masuk untuk mengelola publikasi artikel portal
+                    </p>
+                </div>
+
+                <!-- Pesan Error Login -->
+                <div id="loginErrorBox" class="hidden mb-4 p-3.5 rounded-2xl bg-rose-500/15 border border-rose-500/40 text-rose-600 dark:text-rose-300 text-xs font-semibold flex items-center gap-2">
+                    <i data-lucide="alert-circle" class="w-4 h-4 shrink-0"></i>
+                    <span id="loginErrorText">Username atau Password salah!</span>
+                </div>
+
+                <form onsubmit="handleAdminLogin(event)" class="space-y-4">
+                    <div>
+                        <label for="adminUsername" class="block text-xs font-bold uppercase tracking-wider text-slate-600 dark:text-slate-300 mb-1.5">
+                            Username Admin
+                        </label>
+                        <div class="relative">
+                            <i data-lucide="user" class="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2"></i>
+                            <input 
+                                type="text" 
+                                id="adminUsername" 
+                                required
+                                autocomplete="off"
+                                placeholder="Masukkan username..." 
+                                class="w-full pl-10 pr-4 py-3 rounded-xl bg-slate-50 dark:bg-imuslim-black border border-slate-300 dark:border-slate-700 text-slate-900 dark:text-white text-sm focus:outline-none focus:ring-2 focus:ring-imuslim-sky"
+                            >
+                        </div>
+                    </div>
+
+                    <div>
+                        <label for="adminPassword" class="block text-xs font-bold uppercase tracking-wider text-slate-600 dark:text-slate-300 mb-1.5">
+                            Password
+                        </label>
+                        <div class="relative">
+                            <i data-lucide="key-round" class="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2"></i>
+                            <input 
+                                type="password" 
+                                id="adminPassword" 
+                                required
+                                placeholder="Masukkan password..." 
+                                class="w-full pl-10 pr-12 py-3 rounded-xl bg-slate-50 dark:bg-imuslim-black border border-slate-300 dark:border-slate-700 text-slate-900 dark:text-white text-sm focus:outline-none focus:ring-2 focus:ring-imuslim-sky"
+                            >
+                            <button type="button" onclick="togglePasswordVisibility()" aria-label="Tampilkan/Sembunyikan Password" class="absolute right-3 top-1/2 -translate-y-1/2 p-1.5 text-slate-400 hover:text-imuslim-sky transition">
+                                <i id="eyeIcon" data-lucide="eye" class="w-4 h-4"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <button type="submit" class="w-full py-3.5 rounded-xl bg-gradient-to-r from-imuslim-royal to-imuslim-sky hover:from-imuslim-sky hover:to-imuslim-royal text-white font-bold text-sm shadow-lg shadow-imuslim-sky/25 transition-all mt-2">
+                        Masuk ke Dashboard
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===================================================================== -->
+    <!-- MODAL 3: TAMBAH & EDIT ARTIKEL (CRUD ADMIN)                           -->
+    <!-- ===================================================================== -->
+    <div id="articleFormModal" class="fixed inset-0 z-50 hidden overflow-y-auto bg-imuslim-black/80 backdrop-blur-sm p-4">
+        <div class="min-h-full flex items-center justify-center">
+            <div class="relative w-full max-w-3xl rounded-3xl bg-white dark:bg-imuslim-navy border border-slate-200 dark:border-slate-700 p-6 sm:p-8 shadow-2xl my-8">
+                <div class="flex items-center justify-between pb-4 mb-6 border-b border-slate-200 dark:border-slate-700">
+                    <div class="flex items-center gap-3">
+                        <div class="w-10 h-10 rounded-xl bg-imuslim-sky/20 text-imuslim-sky flex items-center justify-center">
+                            <i data-lucide="file-edit" class="w-5 h-5"></i>
+                        </div>
+                        <div>
+                            <h3 id="formModalTitle" class="text-xl font-extrabold text-slate-900 dark:text-white">Tambah Artikel Baru</h3>
+                            <p class="text-xs text-slate-500 dark:text-slate-400">Lengkapi seluruh data publikasi artikel di bawah ini</p>
+                        </div>
+                    </div>
+                    <button onclick="closeArticleFormModal()" class="p-2 rounded-xl text-slate-400 hover:text-slate-700 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800 transition">
+                        <i data-lucide="x" class="w-5 h-5"></i>
+                    </button>
+                </div>
+
+                <form id="articleCrudForm" onsubmit="handleSaveArticle(event)" class="space-y-5">
+                    <input type="hidden" id="editArticleId" value="">
+
+                    <!-- 1. Judul Artikel & Kategori -->
+                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                        <div class="sm:col-span-2">
+                            <label for="inputTitle" class="block text-xs font-bold uppercase tracking-wider text-slate-700 dark:text-slate-300 mb-1.5">
+                                1. Judul Artikel <span class="text-rose-500">*</span>
+                            </label>
+                            <input 
+                                type="text" 
+                                id="inputTitle" 
+                                required
+                                placeholder="Contoh: Keutamaan Menjaga Lisan dalam Islam"
+                                class="w-full px-4 py-3 rounded-xl bg-slate-50 dark:bg-imuslim-black border border-slate-300 dark:border-slate-700 text-slate-900 dark:text-white text-sm focus:outline-none focus:ring-2 focus:ring-imuslim-sky"
+                            >
+                        </div>
+                        <div>
+                            <label for="inputCategory" class="block text-xs font-bold uppercase tracking-wider text-slate-700 dark:text-slate-300 mb-1.5">
+                                Kategori <span class="text-rose-500">*</span>
+                            </label>
+                            <select 
+                                id="inputCategory" 
+                                required
+                                class="w-full px-4 py-3 rounded-xl bg-slate-50 dark:bg-imuslim-black border border-slate-300 dark:border-slate-700 text-slate-900 dark:text-white text-sm focus:outline-none focus:ring-2 focus:ring-imuslim-sky"
+                            >
+                                <option value="Adab dan Akhlak">Adab dan Akhlak</option>
+                                <option value="Fikih Muslimah">Fikih Muslimah</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <!-- 2. Foto Utama (Upload Lokal & Input URL + Preview) -->
+                    <div class="p-4 rounded-2xl bg-slate-50 dark:bg-imuslim-black/60 border border-slate-200 dark:border-slate-700/80">
+                        <label class="block text-xs font-bold uppercase tracking-wider text-slate-700 dark:text-slate-300 mb-2">
+                            2. Foto Utama Artikel <span class="text-rose-500">*</span>
+                        </label>
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-3">
+                            <div>
+                                <label class="flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-imuslim-royal hover:bg-imuslim-sky text-white text-xs font-semibold cursor-pointer transition">
+                                    <i data-lucide="upload" class="w-4 h-4"></i>
+                                    <span>Unggah File Foto Utama</span>
+                                    <input type="file" accept="image/*" onchange="handleImageUpload(event, 'main')" class="hidden">
+                                </label>
+                            </div>
+                            <div>
+                                <input 
+                                    type="text" 
+                                    id="inputMainImageUrl" 
+                                    oninput="updateImagePreview('main', this.value)"
+                                    placeholder="Atau tempel URL gambar utama..."
+                                    class="w-full px-3.5 py-2.5 rounded-xl bg-white dark:bg-imuslim-navy border border-slate-300 dark:border-slate-700 text-xs text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-imuslim-sky"
+                                >
+                            </div>
+                        </div>
+                        <div class="relative h-40 rounded-xl overflow-hidden bg-slate-200 dark:bg-imuslim-navy border border-dashed border-slate-400 dark:border-slate-600 flex items-center justify-center">
+                            <img id="previewMainImage" src="https://placehold.co/800x400/0F172A/38BDF8?text=Preview+Foto+Utama" alt="Preview Foto Utama" class="w-full h-full object-cover">
+                        </div>
+                    </div>
+
+                    <!-- 3. Detail Artikel -->
+                    <div>
+                        <label for="inputDetail" class="block text-xs font-bold uppercase tracking-wider text-slate-700 dark:text-slate-300 mb-1.5">
+                            3. Detail Artikel (Isi Lengkap) <span class="text-rose-500">*</span>
+                        </label>
+                        <textarea 
+                            id="inputDetail" 
+                            rows="6" 
+                            required
+                            placeholder="Tuliskan pembahasan lengkap artikel di sini. Gunakan baris baru untuk memisahkan paragraf..."
+                            class="w-full px-4 py-3 rounded-xl bg-slate-50 dark:bg-imuslim-black border border-slate-300 dark:border-slate-700 text-slate-900 dark:text-white text-sm leading-relaxed focus:outline-none focus:ring-2 focus:ring-imuslim-sky"
+                        ></textarea>
+                    </div>
+
+                    <!-- 4. Foto Pendukung Artikel (Upload Lokal & Input URL + Preview) -->
+                    <div class="p-4 rounded-2xl bg-slate-50 dark:bg-imuslim-black/60 border border-slate-200 dark:border-slate-700/80">
+                        <label class="block text-xs font-bold uppercase tracking-wider text-slate-700 dark:text-slate-300 mb-2">
+                            4. Foto Pendukung Artikel <span class="text-rose-500">*</span>
+                        </label>
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-3">
+                            <div>
+                                <label class="flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-slate-800 hover:bg-imuslim-sky text-white text-xs font-semibold cursor-pointer transition">
+                                    <i data-lucide="image-plus" class="w-4 h-4"></i>
+                                    <span>Unggah Foto Pendukung</span>
+                                    <input type="file" accept="image/*" onchange="handleImageUpload(event, 'support')" class="hidden">
+                                </label>
+                            </div>
+                            <div>
+                                <input 
+                                    type="text" 
+                                    id="inputSupportImageUrl" 
+                                    oninput="updateImagePreview('support', this.value)"
+                                    placeholder="Atau tempel URL foto pendukung..."
+                                    class="w-full px-3.5 py-2.5 rounded-xl bg-white dark:bg-imuslim-navy border border-slate-300 dark:border-slate-700 text-xs text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-imuslim-sky"
+                                >
+                            </div>
+                        </div>
+                        <div class="relative h-36 rounded-xl overflow-hidden bg-slate-200 dark:bg-imuslim-navy border border-dashed border-slate-400 dark:border-slate-600 flex items-center justify-center">
+                            <img id="previewSupportImage" src="https://placehold.co/800x400/1E3A8A/38BDF8?text=Preview+Foto+Pendukung" alt="Preview Foto Pendukung" class="w-full h-full object-cover">
+                        </div>
+                    </div>
+
+                    <!-- Tombol Submit Form -->
+                    <div class="flex items-center justify-end gap-3 pt-4 border-t border-slate-200 dark:border-slate-700">
+                        <button type="button" onclick="closeArticleFormModal()" class="px-5 py-2.5 rounded-xl bg-slate-200 dark:bg-slate-800 text-slate-700 dark:text-slate-300 text-sm font-semibold hover:bg-slate-300 dark:hover:bg-slate-700 transition">
+                            Batal
+                        </button>
+                        <button type="submit" class="flex items-center gap-2 px-6 py-2.5 rounded-xl bg-gradient-to-r from-imuslim-royal to-imuslim-sky hover:from-imuslim-sky hover:to-imuslim-royal text-white text-sm font-bold shadow-lg shadow-imuslim-sky/25 transition">
+                            <i data-lucide="save" class="w-4 h-4"></i>
+                            <span id="submitBtnText">Simpan & Publikasikan</span>
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===================================================================== -->
+    <!-- MODAL 4: KONFIRMASI HAPUS / RESET (PENGGANTI confirm())              -->
+    <!-- ===================================================================== -->
+    <div id="confirmDialogModal" class="fixed inset-0 z-50 hidden overflow-y-auto bg-imuslim-black/80 backdrop-blur-sm p-4">
+        <div class="min-h-full flex items-center justify-center">
+            <div class="w-full max-w-md rounded-3xl bg-white dark:bg-imuslim-navy border border-slate-200 dark:border-slate-700 p-6 text-center shadow-2xl">
+                <div class="w-14 h-14 rounded-2xl bg-rose-500/15 text-rose-500 mx-auto flex items-center justify-center mb-4">
+                    <i data-lucide="alert-triangle" class="w-7 h-7"></i>
+                </div>
+                <h3 id="confirmDialogTitle" class="text-xl font-bold text-slate-900 dark:text-white">Konfirmasi Tindakan</h3>
+                <p id="confirmDialogMessage" class="text-sm text-slate-500 dark:text-slate-400 mt-2">
+                    Apakah Anda yakin ingin melanjutkan tindakan ini?
+                </p>
+                <div class="flex items-center justify-center gap-3 mt-6">
+                    <button onclick="closeConfirmDialog()" class="px-5 py-2.5 rounded-xl bg-slate-200 dark:bg-slate-800 text-slate-700 dark:text-slate-300 text-sm font-semibold hover:bg-slate-300 transition">
+                        Batal
+                    </button>
+                    <button id="confirmDialogActionBtn" class="px-5 py-2.5 rounded-xl bg-rose-600 hover:bg-rose-700 text-white text-sm font-bold shadow-md transition">
+                        Ya, Lanjutkan
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===================================================================== -->
+    <!-- JAVASCRIPT LOGIC                                                      -->
+    <!-- ===================================================================== -->
+    <script>
+        // Kunci Penyimpanan LocalStorage
+        const STORAGE_KEY_ARTICLES = 'imuslim_articles_v1';
+        const STORAGE_KEY_THEME = 'imuslim_theme_v1';
+        const STORAGE_KEY_ADMIN = 'imuslim_admin_logged_in_v1';
+
+        // Data Artikel Default Berkualitas (Adab dan Akhlak & Fikih Muslimah)
+        const DEFAULT_ARTICLES = [
+            {
+                id: 'art-1',
+                title: 'Keutamaan Menjaga Lisan dan Adab Bertutur Kata di Era Digital',
+                category: 'Adab dan Akhlak',
+                date: '20 November 2026',
+                mainImage: 'https://images.unsplash.com/photo-1584551246679-0daf3d275d0f?auto=format&fit=crop&w=1000&q=80',
+                supportImage: 'https://images.unsplash.com/photo-1519817650390-64a93db51149?auto=format&fit=crop&w=1000&q=80',
+                detail: `Lisan adalah salah satu nikmat terbesar yang Allah Subhanahu wa Ta'ala anugerahkan kepada manusia. Namun di balik ukurannya yang kecil, lisan memiliki dampak yang sangat besar terhadap keselamatan seorang hamba di dunia maupun di akhirat.
+
+Rasulullah Shallallahu 'alaihi wa sallam bersabda: "Barang siapa yang beriman kepada Allah dan hari akhir, hendaklah ia berkata baik atau diam." (HR. Bukhari dan Muslim).
+
+Di era media sosial saat ini, makna "lisan" meluas mencakup setiap tulisan, komentar, dan unggahan yang kita bagikan. Seorang Muslim yang beradab akan selalu menimbang manfaat dan mudarat sebelum mengetikkan sebuah kalimat:
+
+1. Menghindari Ghibah dan Namimah: Tidak membicarakan aib saudara sesama Muslim, baik secara langsung maupun melalui kolom komentar.
+2. Tabayyun Sebelum Menyebarkan Berita: Memastikan kebenaran informasi agar tidak terjerumus dalam penyebaran fitnah dan berita dusta.
+3. Lemah Lembut dalam Nasihat: Menyampaikan kebenaran dengan bahasa yang santun, tidak merendahkan, dan penuh kasih sayang.
+
+Dengan menjaga lisan dan jari-jemari, hati menjadi lebih tenang dan persaudaraan sesama umat Islam senantiasa terjaga.`
+            },
+            {
+                id: 'art-2',
+                title: 'Panduan Lengkap Fikih Thaharah: Memahami Hukum Haid dan Istihadhah',
+                category: 'Fikih Muslimah',
+                date: '18 November 2026',
+                mainImage: 'https://images.unsplash.com/photo-1564769625905-50e93615e769?auto=format&fit=crop&w=1000&q=80',
+                supportImage: 'https://images.unsplash.com/photo-1609599006353-e629aaabfeae?auto=format&fit=crop&w=1000&q=80',
+                detail: `Memahami bab darah kebiasaan wanita (haid, nifas, dan istihadhah) merupakan ilmu fardhu 'ain bagi setiap Muslimah karena berkaitan erat dengan sah atau tidaknya ibadah shalat, puasa, dan thawaf.
+
+Imam An-Nawawi rahimahullah menyebutkan bahwa bab haid adalah salah satu bab fikih yang paling penting untuk dipelajari secara teliti oleh kaum wanita.
+
+Perbedaan Utama Haid dan Istihadhah:
+- Darah Haid: Darah alami yang keluar dari rahim wanita pada waktu-waktu tertentu dalam keadaan sehat. Umumnya berlangsung minimal sehari semalam (24 jam) dan maksimal 15 hari, dengan masa kebiasaan 6 hingga 7 hari. Saat haid, Muslimah dilarang melaksanakan shalat dan puasa, serta wajib mengqadha puasa Ramadhan setelah suci.
+- Darah Istihadhah: Darah penyakit yang keluar di luar kebiasaan masa haid (misalnya melebihi batas maksimal 15 hari). Wanita yang mengalami istihadhah tetap wajib melaksanakan shalat lima waktu dan berpuasa.
+
+Tata Cara Bersuci Bagi Wanita Istihadhah:
+1. Membersihkan kemaluan dan memakai pembalut sebelum berwudhu.
+2. Berwudhu setiap kali masuk waktu shalat fardhu.
+3. Segera melaksanakan shalat setelah berwudhu tanpa menunda-nunda tanpa uzur.
+
+Dengan memahami kaidah fikih ini, seorang Muslimah dapat beribadah dengan penuh keyakinan dan ketenangan hati.`
+            },
+            {
+                id: 'art-3',
+                title: 'Adab Memuliakan Orang Tua: Pintu Surga Paling Tengah',
+                category: 'Adab dan Akhlak',
+                date: '15 November 2026',
+                mainImage: 'https://images.unsplash.com/photo-1542816417-0983c9c9ad53?auto=format&fit=crop&w=1000&q=80',
+                supportImage: 'https://images.unsplash.com/photo-1591604129939-f1efa4d9f7fa?auto=format&fit=crop&w=1000&q=80',
+                detail: `Berbakti kepada kedua orang tua (Birrul Walidain) merupakan amalan yang sangat agung kedudukannya dalam Islam, bahkan Allah menggandengkan perintah berbakti kepada orang tua tepat setelah perintah mentauhidkan-Nya.
+
+Allah Ta'ala berfirman dalam Surah Al-Isra ayat 23 agar kita tidak mengucapkan perkataan "ah" kepada keduanya dan tidak membentak mereka, melainkan mengucapkan perkataan yang mulia.
+
+Beberapa adab praktis dalam memuliakan ayah dan ibu:
+- Mendahulukan panggilan dan kebutuhan mereka di atas urusan pribadi selama tidak dalam kemaksiatan.
+- Merendahkan suara dan menatap keduanya dengan pandangan penuh kasih sayang dan hormat.
+- Mendoakan kebaikan serta ampunan untuk mereka di setiap sujud dan selepas shalat fardhu: "Rabbighfir lii wa liwaalidayya warhamhumaa kamaa rabbayaanii shaghiiraa."
+- Menyambung tali silaturahmi dengan kerabat dan sahabat-sahabat terdekat orang tua, bahkan setelah keduanya wafat.
+
+Rasulullah SAW bersabda bahwa orang tua adalah pintu surga yang paling tengah; maka jagalah pintu tersebut dengan bakti terbaik.`
+            },
+            {
+                id: 'art-4',
+                title: 'Syarat-Syarat Hijab Syar’i bagi Muslimah Menurut Al-Qur’an dan Sunnah',
+                category: 'Fikih Muslimah',
+                date: '12 November 2026',
+                mainImage: 'https://images.unsplash.com/photo-1585036156171-384164a8c675?auto=format&fit=crop&w=1000&q=80',
+                supportImage: 'https://images.unsplash.com/photo-1537633552985-df8429e8048b?auto=format&fit=crop&w=1000&q=80',
+                detail: `Hijab bukan sekadar identitas budaya, melainkan bentuk ketaatan dan pemuliaan Islam terhadap kehormatan seorang wanita. Allah memerintahkan para wanita beriman untuk mengulurkan jilbabnya ke seluruh tubuh agar lebih mudah dikenal dan tidak diganggu (QS. Al-Ahzab: 59).
+
+Para ulama fikih merumuskan kriteria pakaian Muslimah yang sesuai dengan syariat:
+1. Menutup Seluruh Aurat: Seluruh tubuh wanita adalah aurat di hadapan laki-laki non-mahram kecuali wajah dan kedua telapak tangan menurut jumhur ulama.
+2. Kain Tidak Tipis dan Tidak Menerawang: Bahan pakaian hendaknya cukup tebal sehingga tidak menampakkan warna kulit atau lekuk tubuh.
+3. Longgar dan Tidak Ketat: Pakaian yang longgar menjaga kehormatan pemakainya dan tidak membentuk lekuk badan.
+4. Tidak Menyerupai Pakaian Laki-laki: Islam menjaga fitrah dan kekhasan masing-masing gender.
+5. Sederhana dan Tidak Berlebihan (Tabarruj): Tidak memakai wewangian menyengat saat keluar rumah atau perhiasan mencolok yang mengundang perhatian.
+
+Menjalankan perintah hijab dengan ikhlas akan menghadirkan rasa aman, wibawa, dan keteduhan jiwa bagi setiap Muslimah.`
+            },
+            {
+                id: 'art-5',
+                title: 'Adab Bertamu dan Menerima Tamu: Menghidupkan Sunnah yang Kian Terlupa',
+                category: 'Adab dan Akhlak',
+                date: '09 November 2026',
+                mainImage: 'https://images.unsplash.com/photo-1519817650390-64a93db51149?auto=format&fit=crop&w=1000&q=80',
+                supportImage: 'https://images.unsplash.com/photo-1584551246679-0daf3d275d0f?auto=format&fit=crop&w=1000&q=80',
+                detail: `Silaturahmi adalah kunci dilapangkannya rezeki dan dipanjangkannya umur dalam keberkahan. Dalam Islam, aktivitas bertamu maupun menerima tamu diatur dengan adab yang sangat indah agar kedua belah pihak merasa nyaman.
+
+Adab bagi Orang yang Bertamu:
+- Meminta izin terlebih dahulu dan memilih waktu yang tepat (bukan waktu istirahat atau larut malam).
+- Mengucapkan salam dengan ramah dan mengetuk pintu maksimal tiga kali dengan sopan.
+- Menjaga pandangan dari bagian dalam rumah tuan rumah yang bukan haknya.
+- Tidak berlama-lama hingga memberatkan tuan rumah.
+
+Adab bagi Tuan Rumah:
+- Menyambut tamu dengan wajah berseri-seri dan ucapan selamat datang yang hangat.
+- Menyuguhkan jamuan terbaik sesuai kemampuan tanpa memaksakan diri secara berlebihan.
+- Mengantarkan tamu hingga ke depan pintu saat ia hendak berpamitan pulang.`
+            },
+            {
+                id: 'art-6',
+                title: 'Keutamaan Shalat Muslimah di Rumah dan Adab Ketika ke Masjid',
+                category: 'Fikih Muslimah',
+                date: '05 November 2026',
+                mainImage: 'https://images.unsplash.com/photo-1564769625905-50e93615e769?auto=format&fit=crop&w=1000&q=80',
+                supportImage: 'https://images.unsplash.com/photo-1542816417-0983c9c9ad53?auto=format&fit=crop&w=1000&q=80',
+                detail: `Islam memberikan kemudahan dan kemuliaan luar biasa bagi kaum wanita dalam beribadah. Berbeda dengan laki-laki yang sangat ditekankan shalat berjamaah di masjid, shalat seorang Muslimah di rumahnya memiliki keutamaan yang sangat besar.
+
+Dalam sebuah hadits riwayat Abu Dawud, Rasulullah Shallallahu 'alaihi wa sallam menjelaskan bahwa shalat seorang wanita di kamarnya lebih utama daripada di ruang tengah rumahnya, dan di ruang tengah rumahnya lebih utama daripada di luar rumahnya.
+
+Namun demikian, apabila seorang Muslimah ingin menghadiri shalat berjamaah atau majelis ilmu di masjid, suami atau walinya tidak boleh melarangnya selama ia memperhatikan adab-adab berikut:
+1. Meminta izin kepada suami atau orang tua sebelum berangkat ke masjid.
+2. Mengenakan pakaian yang menutup aurat secara sempurna dan sopan.
+3. Tidak memakai parfum atau wewangian yang semerbak saat keluar menuju masjid.
+4. Menempati shaf khusus wanita dan segera pulang setelah selesai shalat tanpa berdesak-desakan.
+
+Keseimbangan antara fikih dan adab inilah yang menjadikan ibadah seorang Muslimah semakin bernilai di sisi Allah.`
+            }
+        ];
+
+        // State Aplikasi
+        let articles = [];
+        let currentCategory = 'Semua';
+        let searchQuery = '';
+        let isAdminLoggedIn = false;
+
+        // Inisialisasi Saat Halaman Dimuat
+        document.addEventListener('DOMContentLoaded', () => {
+            initTheme();
+            loadArticles();
+            checkAdminSession();
+            renderArticles();
+            lucide.createIcons();
+        });
+
+        // =====================================================================
+        // 1. MANAJEMEN TEMA SIANG & MALAM
+        // =====================================================================
+        function initTheme() {
+            const savedTheme = localStorage.getItem(STORAGE_KEY_THEME) || 'dark';
+            applyTheme(savedTheme);
+        }
+
+        function toggleTheme() {
+            const htmlEl = document.documentElement;
+            const isDark = htmlEl.classList.contains('dark');
+            const nextTheme = isDark ? 'light' : 'dark';
+            applyTheme(nextTheme);
+            localStorage.setItem(STORAGE_KEY_THEME, nextTheme);
+            showToast(nextTheme === 'dark' ? 'Beralih ke Mode Malam' : 'Beralih ke Mode Siang', 'info');
+        }
+
+        function applyTheme(theme) {
+            const htmlEl = document.documentElement;
+            const sunIcon = document.getElementById('themeIconSun');
+            const moonIcon = document.getElementById('themeIconMoon');
+            const label = document.getElementById('themeLabel');
+
+            if (theme === 'dark') {
+                htmlEl.classList.add('dark');
+                sunIcon.classList.remove('hidden');
+                moonIcon.classList.add('hidden');
+                label.textContent = 'Mode Siang';
+            } else {
+                htmlEl.classList.remove('dark');
+                sunIcon.classList.add('hidden');
+                moonIcon.classList.remove('hidden');
+                label.textContent = 'Mode Malam';
+            }
+        }
+
+        // =====================================================================
+        // 2. PENYIMPANAN & PEMUATAN ARTIKEL (LOCALSTORAGE)
+        // =====================================================================
+        function loadArticles() {
+            try {
+                const stored = localStorage.getItem(STORAGE_KEY_ARTICLES);
+                if (stored) {
+                    const parsed = JSON.parse(stored);
+                    articles = Array.isArray(parsed) ? parsed : [...DEFAULT_ARTICLES];
+                } else {
+                    articles = [...DEFAULT_ARTICLES];
+                    saveArticlesToStorage();
+                }
+            } catch (e) {
+                articles = [...DEFAULT_ARTICLES];
+            }
+        }
+
+        function saveArticlesToStorage() {
+            try {
+                localStorage.setItem(STORAGE_KEY_ARTICLES, JSON.stringify(articles));
+            } catch (e) {
+                showToast('Penyimpanan penuh! Gunakan gambar dengan ukuran lebih kecil atau URL.', 'error');
+            }
+        }
+
+        // =====================================================================
+        // 3. NAVIGASI, FILTER KATEGORI & PENCARIAN
+        // =====================================================================
+        function filterCategory(category) {
+            currentCategory = category;
+
+            // Update tombol navigasi desktop
+            document.querySelectorAll('.nav-btn').forEach(btn => {
+                if (btn.dataset.nav === category) {
+                    btn.className = 'nav-btn px-4 py-2 rounded-xl text-sm font-semibold transition-all bg-imuslim-royal text-white shadow-sm';
+                } else {
+                    btn.className = 'nav-btn px-4 py-2 rounded-xl text-sm font-semibold text-slate-600 dark:text-slate-300 hover:text-imuslim-sky transition-all';
+                }
+            });
+
+            // Update tombol navigasi mobile
+            document.querySelectorAll('.mobile-nav-btn').forEach(btn => {
+                if (btn.dataset.navMobile === category) {
+                    btn.className = 'mobile-nav-btn w-full text-left px-4 py-2.5 rounded-xl text-sm font-semibold bg-imuslim-royal text-white';
+                } else {
+                    btn.className = 'mobile-nav-btn w-full text-left px-4 py-2.5 rounded-xl text-sm font-semibold text-slate-700 dark:text-slate-300';
+                }
+            });
+
+            // Update filter pills
+            document.querySelectorAll('.pill-btn').forEach(btn => {
+                if (btn.dataset.pill === category) {
+                    btn.className = 'pill-btn px-4 py-2 rounded-xl text-xs sm:text-sm font-semibold bg-imuslim-royal text-white transition shadow-sm';
+                } else {
+                    btn.className = 'pill-btn px-4 py-2 rounded-xl text-xs sm:text-sm font-semibold bg-slate-200/70 dark:bg-imuslim-navy text-slate-700 dark:text-slate-300 hover:border-imuslim-sky transition';
+                }
+            });
+
+            // Update Heading
+            const headingEl = document.querySelector('#sectionHeading span:last-child');
+            if (category === 'Semua') {
+                headingEl.textContent = 'Semua Artikel Pilihan';
+            } else {
+                headingEl.textContent = `Kategori: ${category}`;
+            }
+
+            renderArticles();
+        }
+
+        function handleSearch() {
+            const input = document.getElementById('searchInput');
+            const clearBtn = document.getElementById('clearSearchBtn');
+            searchQuery = input.value.trim().toLowerCase();
+
+            if (searchQuery.length > 0) {
+                clearBtn.classList.remove('hidden');
+            } else {
+                clearBtn.classList.add('hidden');
+            }
+            renderArticles();
+        }
+
+        function clearSearch() {
+            document.getElementById('searchInput').value = '';
+            searchQuery = '';
+            document.getElementById('clearSearchBtn').classList.add('hidden');
+            renderArticles();
+        }
+
+        function resetFilters() {
+            clearSearch();
+            filterCategory('Semua');
+        }
+
+        function toggleMobileMenu() {
+            const menu = document.getElementById('mobileMenu');
+            menu.classList.toggle('hidden');
+        }
+
+        // =====================================================================
+        // 4. RENDER KARTU ARTIKEL & MODAL BACA DETAIL
+        // =====================================================================
+        function renderArticles() {
+            const grid = document.getElementById('articlesGrid');
+            const emptyState = document.getElementById('emptyState');
+            const countText = document.getElementById('articleCountText');
+
+            const filtered = articles.filter(article => {
+                const matchCategory = currentCategory === 'Semua' || article.category === currentCategory;
+                const matchSearch = !searchQuery || 
+                    article.title.toLowerCase().includes(searchQuery) || 
+                    article.detail.toLowerCase().includes(searchQuery) ||
+                    article.category.toLowerCase().includes(searchQuery);
+                return matchCategory && matchSearch;
+            });
+
+            countText.textContent = `Menampilkan ${filtered.length} artikel ${currentCategory !== 'Semua' ? 'dalam kategori ' + currentCategory : 'tersedia'}`;
+
+            if (filtered.length === 0) {
+                grid.innerHTML = '';
+                emptyState.classList.remove('hidden');
+                lucide.createIcons();
+                return;
+            }
+
+            emptyState.classList.add('hidden');
+
+            grid.innerHTML = filtered.map(article => {
+                const badgeStyle = article.category === 'Fikih Muslimah'
+                    ? 'bg-sky-500/90 text-white'
+                    : 'bg-imuslim-royal/95 text-imuslim-light border border-imuslim-light/30';
+
+                // Potong ringkasan bersih
+                const excerpt = article.detail.replace(/\n+/g, ' ').slice(0, 125) + '...';
+
+                // Tombol Aksi Admin (Edit & Hapus)
+                const adminControls = isAdminLoggedIn ? `
+                    <div class="flex items-center gap-2 pt-3 mt-3 border-t border-slate-200 dark:border-slate-800">
+                        <button onclick="event.stopPropagation(); openEditArticleModal('${article.id}')" class="flex-1 flex items-center justify-center gap-1.5 py-2 px-3 rounded-xl bg-amber-500/15 hover:bg-amber-500 text-amber-600 dark:text-amber-300 hover:text-white text-xs font-bold transition">
+                            <i data-lucide="pencil" class="w-3.5 h-3.5"></i>
+                            <span>Edit</span>
+                        </button>
+                        <button onclick="event.stopPropagation(); confirmDeleteArticle('${article.id}')" class="flex-1 flex items-center justify-center gap-1.5 py-2 px-3 rounded-xl bg-rose-500/15 hover:bg-rose-600 text-rose-600 dark:text-rose-300 hover:text-white text-xs font-bold transition">
+                            <i data-lucide="trash-2" class="w-3.5 h-3.5"></i>
+                            <span>Hapus</span>
+                        </button>
+                    </div>
+                ` : '';
+
+                return `
+                    <article onclick="openDetailModal('${article.id}')" class="group cursor-pointer rounded-3xl bg-white dark:bg-imuslim-navy border border-slate-200/90 dark:border-slate-800 hover:border-imuslim-sky dark:hover:border-imuslim-light/60 overflow-hidden shadow-sm hover:shadow-xl hover:shadow-imuslim-sky/10 transition-all duration-300 flex flex-col">
+                        <!-- Foto Utama Kartu -->
+                        <div class="relative h-52 w-full overflow-hidden bg-imuslim-black">
+                            <img 
+                                src="${escapeHtml(article.mainImage)}" 
+                                alt="${escapeHtml(article.title)}" 
+                                class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                                onerror="this.src='https://placehold.co/800x500/0F172A/38BDF8?text=IMUSLIM'"
+                            >
+                            <div class="absolute inset-0 bg-gradient-to-t from-imuslim-black/70 via-transparent to-transparent"></div>
+                            <span class="absolute top-3.5 left-3.5 px-3 py-1 rounded-full text-[11px] font-bold backdrop-blur-md shadow ${badgeStyle}">
+                                ${escapeHtml(article.category)}
+                            </span>
+                        </div>
+
+                        <!-- Body Kartu -->
+                        <div class="p-6 flex-1 flex flex-col justify-between">
+                            <div>
+                                <div class="flex items-center gap-2 text-xs text-slate-500 dark:text-slate-400 mb-2">
+                                    <i data-lucide="calendar" class="w-3.5 h-3.5 text-imuslim-sky"></i>
+                                    <span>${escapeHtml(article.date)}</span>
+                                </div>
+                                <h3 class="text-lg font-bold text-slate-900 dark:text-white group-hover:text-imuslim-sky transition-colors line-clamp-2 leading-snug mb-2.5">
+                                    ${escapeHtml(article.title)}
+                                </h3>
+                                <p class="text-sm text-slate-600 dark:text-slate-400 line-clamp-3 leading-relaxed">
+                                    ${escapeHtml(excerpt)}
+                                </p>
+                            </div>
+
+                            <div class="mt-5">
+                                <div class="flex items-center justify-between text-xs font-bold text-imuslim-royal dark:text-imuslim-light group-hover:translate-x-1 transition-transform">
+                                    <span>Baca Selengkapnya</span>
+                                    <i data-lucide="arrow-right" class="w-4 h-4"></i>
+                                </div>
+                                ${adminControls}
+                            </div>
+                        </div>
+                    </article>
+                `;
+            }).join('');
+
+            lucide.createIcons();
+        }
+
+        function openDetailModal(articleId) {
+            const article = articles.find(a => a.id === articleId);
+            if (!article) return;
+
+            document.getElementById('detailMainImage').src = article.mainImage;
+            document.getElementById('detailCategoryBadge').textContent = article.category;
+            document.getElementById('detailTitle').textContent = article.title;
+            document.getElementById('detailDate').textContent = article.date;
+            document.getElementById('detailContent').textContent = article.detail;
+
+            const supportSection = document.getElementById('detailSupportSection');
+            const supportImg = document.getElementById('detailSupportImage');
+            if (article.supportImage && article.supportImage.trim() !== '') {
+                supportImg.src = article.supportImage;
+                supportSection.classList.remove('hidden');
+            } else {
+                supportSection.classList.add('hidden');
+            }
+
+            document.getElementById('articleDetailModal').classList.remove('hidden');
+            document.body.style.overflow = 'hidden';
+            lucide.createIcons();
+        }
+
+        function closeDetailModal() {
+            document.getElementById('articleDetailModal').classList.add('hidden');
+            document.body.style.overflow = '';
+        }
+
+        // =====================================================================
+        // 5. SISTEM LOGIN & AUTENTIKASI ADMIN
+        // =====================================================================
+        function checkAdminSession() {
+            isAdminLoggedIn = localStorage.getItem(STORAGE_KEY_ADMIN) === 'true';
+            updateAdminUI();
+        }
+
+        function openLoginModal() {
+            document.getElementById('loginErrorBox').classList.add('hidden');
+            document.getElementById('adminUsername').value = '';
+            document.getElementById('adminPassword').value = '';
+            document.getElementById('loginModal').classList.remove('hidden');
+            lucide.createIcons();
+        }
+
+        function closeLoginModal() {
+            document.getElementById('loginModal').classList.add('hidden');
+        }
+
+        function togglePasswordVisibility() {
+            const pwdInput = document.getElementById('adminPassword');
+            const eyeIcon = document.getElementById('eyeIcon');
+            if (pwdInput.type === 'password') {
+                pwdInput.type = 'text';
+                eyeIcon.setAttribute('data-lucide', 'eye-off');
+            } else {
+                pwdInput.type = 'password';
+                eyeIcon.setAttribute('data-lucide', 'eye');
+            }
+            lucide.createIcons();
+        }
+
+        function handleAdminLogin(event) {
+            event.preventDefault();
+            const username = document.getElementById('adminUsername').value.trim();
+            const password = document.getElementById('adminPassword').value;
+            const errorBox = document.getElementById('loginErrorBox');
+
+            // Validasi Exact sesuai spesifikasi
+            if (username === 'DIRBILSYA' && password === '8CCIHUY') {
+                isAdminLoggedIn = true;
+                localStorage.setItem(STORAGE_KEY_ADMIN, 'true');
+                closeLoginModal();
+                updateAdminUI();
+                renderArticles();
+                showToast('Selamat datang kembali, Admin DIRBILSYA!', 'success');
+            } else {
+                errorBox.classList.remove('hidden');
+                lucide.createIcons();
+            }
+        }
+
+        function logoutAdmin() {
+            isAdminLoggedIn = false;
+            localStorage.removeItem(STORAGE_KEY_ADMIN);
+            updateAdminUI();
+            renderArticles();
+            showToast('Anda telah keluar dari sesi Admin.', 'info');
+        }
+
+        function updateAdminUI() {
+            const headerAction = document.getElementById('adminHeaderAction');
+            const dashboardPanel = document.getElementById('adminDashboardPanel');
+
+            if (isAdminLoggedIn) {
+                dashboardPanel.classList.remove('hidden');
+                headerAction.innerHTML = `
+                    <div class="flex items-center gap-2">
+                        <button onclick="openArticleFormModal()" class="flex items-center gap-1.5 px-3.5 py-2.5 rounded-xl bg-imuslim-sky hover:bg-imuslim-royal text-white text-xs sm:text-sm font-bold shadow-md transition">
+                            <i data-lucide="plus" class="w-4 h-4"></i>
+                            <span class="hidden sm:inline">Tulis Artikel</span>
+                        </button>
+                        <button onclick="logoutAdmin()" title="Logout Admin" class="p-2.5 rounded-xl bg-rose-500/15 hover:bg-rose-600 text-rose-500 hover:text-white border border-rose-500/30 transition">
+                            <i data-lucide="log-out" class="w-4 h-4"></i>
+                        </button>
+                    </div>
+                `;
+            } else {
+                dashboardPanel.classList.add('hidden');
+                headerAction.innerHTML = `
+                    <button onclick="openLoginModal()" class="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-gradient-to-r from-imuslim-royal to-imuslim-sky hover:from-imuslim-sky hover:to-imuslim-royal text-white text-xs sm:text-sm font-semibold shadow-md shadow-imuslim-sky/20 transition-all">
+                        <i data-lucide="shield-check" class="w-4 h-4"></i>
+                        <span>Login Admin</span>
+                    </button>
+                `;
+            }
+            lucide.createIcons();
+        }
+
+        // =====================================================================
+        // 6. CRUD ARTIKEL (TAMBAH, EDIT, HAPUS, RESET)
+        // =====================================================================
+        function openArticleFormModal() {
+            if (!isAdminLoggedIn) return;
+            document.getElementById('editArticleId').value = '';
+            document.getElementById('formModalTitle').textContent = 'Tambah Artikel Baru';
+            document.getElementById('submitBtnText').textContent = 'Simpan & Publikasikan';
+            document.getElementById('articleCrudForm').reset();
+
+            const defaultMainPlaceholder = 'https://placehold.co/800x400/0F172A/38BDF8?text=Preview+Foto+Utama';
+            const defaultSupportPlaceholder = 'https://placehold.co/800x400/1E3A8A/38BDF8?text=Preview+Foto+Pendukung';
+
+            document.getElementById('previewMainImage').src = defaultMainPlaceholder;
+            document.getElementById('previewSupportImage').src = defaultSupportPlaceholder;
+
+            document.getElementById('articleFormModal').classList.remove('hidden');
+            document.body.style.overflow = 'hidden';
+            lucide.createIcons();
+        }
+
+        function openEditArticleModal(articleId) {
+            if (!isAdminLoggedIn) return;
+            const article = articles.find(a => a.id === articleId);
+            if (!article) return;
+
+            document.getElementById('editArticleId').value = article.id;
+            document.getElementById('formModalTitle').textContent = 'Edit Publikasi Artikel';
+            document.getElementById('submitBtnText').textContent = 'Perbarui Artikel';
+
+            document.getElementById('inputTitle').value = article.title;
+            document.getElementById('inputCategory').value = article.category;
+            document.getElementById('inputMainImageUrl').value = article.mainImage;
+            document.getElementById('previewMainImage').src = article.mainImage;
+            document.getElementById('inputDetail').value = article.detail;
+            document.getElementById('inputSupportImageUrl').value = article.supportImage || '';
+            document.getElementById('previewSupportImage').src = article.supportImage || 'https://placehold.co/800x400/1E3A8A/38BDF8?text=Preview+Foto+Pendukung';
+
+            document.getElementById('articleFormModal').classList.remove('hidden');
+            document.body.style.overflow = 'hidden';
+            lucide.createIcons();
+        }
+
+        function closeArticleFormModal() {
+            document.getElementById('articleFormModal').classList.add('hidden');
+            document.body.style.overflow = '';
+        }
+
+        // Upload Gambar Lokal ke Base64
+        function handleImageUpload(event, targetType) {
+            const file = event.target.files[0];
+            if (!file) return;
+
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const base64Data = e.target.result;
+                if (targetType === 'main') {
+                    document.getElementById('inputMainImageUrl').value = base64Data;
+                    document.getElementById('previewMainImage').src = base64Data;
+                } else {
+                    document.getElementById('inputSupportImageUrl').value = base64Data;
+                    document.getElementById('previewSupportImage').src = base64Data;
+                }
+                showToast('Gambar berhasil dimuat!', 'success');
+            };
+            reader.readAsDataURL(file);
+        }
+
+        function updateImagePreview(targetType, url) {
+            const cleanUrl = url.trim();
+            if (targetType === 'main') {
+                document.getElementById('previewMainImage').src = cleanUrl || 'https://placehold.co/800x400/0F172A/38BDF8?text=Preview+Foto+Utama';
+            } else {
+                document.getElementById('previewSupportImage').src = cleanUrl || 'https://placehold.co/800x400/1E3A8A/38BDF8?text=Preview+Foto+Pendukung';
+            }
+        }
+
+        function handleSaveArticle(event) {
+            event.preventDefault();
+            if (!isAdminLoggedIn) return;
+
+            const editId = document.getElementById('editArticleId').value;
+            const title = document.getElementById('inputTitle').value.trim();
+            const category = document.getElementById('inputCategory').value;
+            const mainImage = document.getElementById('inputMainImageUrl').value.trim() || 'https://images.unsplash.com/photo-1584551246679-0daf3d275d0f?auto=format&fit=crop&w=1000&q=80';
+            const detail = document.getElementById('inputDetail').value.trim();
+            const supportImage = document.getElementById('inputSupportImageUrl').value.trim() || 'https://images.unsplash.com/photo-1519817650390-64a93db51149?auto=format&fit=crop&w=1000&q=80';
+
+            const months = ['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'];
+            const now = new Date();
+            const formattedDate = `${String(now.getDate()).padStart(2, '0')} ${months[now.getMonth()]} ${now.getFullYear()}`;
+
+            if (editId) {
+                // Mode Edit
+                const idx = articles.findIndex(a => a.id === editId);
+                if (idx !== -1) {
+                    articles[idx] = {
+                        ...articles[idx],
+                        title,
+                        category,
+                        mainImage,
+                        detail,
+                        supportImage
+                    };
+                    showToast('Artikel berhasil diperbarui!', 'success');
+                }
+            } else {
+                // Mode Tambah Baru
+                const newArticle = {
+                    id: 'art-' + Date.now(),
+                    title,
+                    category,
+                    date: formattedDate,
+                    mainImage,
+                    detail,
+                    supportImage
+                };
+                articles.unshift(newArticle);
+                showToast('Artikel baru berhasil dipublikasikan!', 'success');
+            }
+
+            saveArticlesToStorage();
+            closeArticleFormModal();
+            renderArticles();
+        }
+
+        // Konfirmasi Hapus Artikel
+        function confirmDeleteArticle(articleId) {
+            const article = articles.find(a => a.id === articleId);
+            if (!article) return;
+
+            document.getElementById('confirmDialogTitle').textContent = 'Hapus Artikel?';
+            document.getElementById('confirmDialogMessage').textContent = `Artikel "${article.title}" akan dihapus secara permanen dari daftar publikasi.`;
+            
+            const actionBtn = document.getElementById('confirmDialogActionBtn');
+            actionBtn.onclick = function() {
+                articles = articles.filter(a => a.id !== articleId);
+                saveArticlesToStorage();
+                renderArticles();
+                closeConfirmDialog();
+                showToast('Artikel telah dihapus.', 'info');
+            };
+
+            document.getElementById('confirmDialogModal').classList.remove('hidden');
+            lucide.createIcons();
+        }
+
+        // Konfirmasi Reset Artikel Default
+        function openConfirmResetModal() {
+            document.getElementById('confirmDialogTitle').textContent = 'Reset ke Artikel Default?';
+            document.getElementById('confirmDialogMessage').textContent = 'Semua perubahan atau artikel tambahan akan dikembalikan ke 6 artikel bawaan IMUSLIM.';
+            
+            const actionBtn = document.getElementById('confirmDialogActionBtn');
+            actionBtn.onclick = function() {
+                articles = [...DEFAULT_ARTICLES];
+                saveArticlesToStorage();
+                renderArticles();
+                closeConfirmDialog();
+                showToast('Data artikel berhasil dikembalikan ke pengaturan awal.', 'success');
+            };
+
+            document.getElementById('confirmDialogModal').classList.remove('hidden');
+            lucide.createIcons();
+        }
+
+        function closeConfirmDialog() {
+            document.getElementById('confirmDialogModal').classList.add('hidden');
+        }
+
+        // =====================================================================
+        // 7. UTILITAS (TOAST & SANITASI HTML)
+        // =====================================================================
+        function showToast(message, type = 'info') {
+            const container = document.getElementById('toastContainer');
+            const toast = document.createElement('div');
+
+            let bgClass = 'bg-imuslim-navy border-imuslim-sky text-white';
+            let iconName = 'info';
+
+            if (type === 'success') {
+                bgClass = 'bg-emerald-950/95 border-emerald-400 text-emerald-100';
+                iconName = 'check-circle-2';
+            } else if (type === 'error') {
+                bgClass = 'bg-rose-950/95 border-rose-400 text-rose-100';
+                iconName = 'alert-circle';
+            }
+
+            toast.className = `pointer-events-auto flex items-center gap-2.5 px-4 py-3 rounded-2xl border shadow-xl backdrop-blur-md text-xs sm:text-sm font-semibold transition-all duration-300 translate-y-2 opacity-0 ${bgClass}`;
+            toast.innerHTML = `
+                <i data-lucide="${iconName}" class="w-4 h-4 shrink-0 text-imuslim-light"></i>
+                <span>${escapeHtml(message)}</span>
+            `;
+
+            container.appendChild(toast);
+            lucide.createIcons();
+
+            requestAnimationFrame(() => {
+                toast.classList.remove('translate-y-2', 'opacity-0');
+            });
+
+            setTimeout(() => {
+                toast.classList.add('translate-y-2', 'opacity-0');
+                setTimeout(() => toast.remove(), 300);
+            }, 3200);
+        }
+
+        function escapeHtml(str) {
+            if (!str) return '';
+            return String(str)
+                .replace(/&/g, '&amp;')
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;')
+                .replace(/"/g, '&quot;')
+                .replace(/'/g, '&#039;');
+        }
+    </script>
+</body>
+</html>
